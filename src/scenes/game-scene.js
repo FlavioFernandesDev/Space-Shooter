@@ -1,6 +1,7 @@
 import { Player } from '../objects/player.js';
 
 export class GameScene extends Phaser.Scene {
+
     constructor() {
         super('GameScene');
     }
@@ -11,7 +12,6 @@ export class GameScene extends Phaser.Scene {
 
     create() {
         const player = new Player(this);
-        this.add.sprite(100, 100, 'ship');
-      
     }
+    
 }
