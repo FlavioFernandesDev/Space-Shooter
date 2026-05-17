@@ -1,39 +1,33 @@
-// Configuração base do teu jogo
+//importar cenas
+import { BootScene } from './scenes/boot-scene.js';
+import { PreloadScene } from './scenes/preload-scene.js';
+import { GameScene } from './scenes/game-scene.js';
+
 const config = {
-    type: Phaser.AUTO, // O Phaser escolhe renderizar em WebGL ou Canvas
-    width: 800,        // Largura do ecrã do jogo
-    height: 600,       // Altura do ecrã do jogo
-    physics: {
-        default: 'arcade', // Física obrigatória para as colisões do teu shooter [cite: 11, 41]
-        arcade: {
-            gravity: { y: 0 }, // Num space shooter top-down não há gravidade a puxar para baixo!
-            debug: false
-        }
+    type: Phaser.CANVAS,
+    roundPixels: true,
+    pixelArt: true,
+    scale: {
+        parent: 'game-container', 
+        width: 450,
+        height: 640,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
     },
-    scene: {
-        preload: preload,
-        create: create,
-        update: update
+    backgroundColor: '#000000',
+    physics: {
+        default: 'arcade', // Usar o sistema de física Arcade
+        arcade: {
+            gravity: { y: 0, x: 0 }, 
+            debug: true, // Mostra as caixas de colisão. Lembra-te de meter 'false' na entrega final!
+        }
     }
 };
 
-// Arranca o motor do jogo com as configurações acima
 const game = new Phaser.Game(config);
 
-// 1. PRELOAD: Carregar imagens e sons antes do jogo começar 
-function preload() {
-    // É aqui que vais colocar: this.load.image('nave', 'assets/nave.png');
-}
+game.scene.add('BootScene', BootScene);
+game.scene.add('PreloadScene', PreloadScene);
+game.scene.add('GameScene', GameScene);
+game.scene.start('BootScene');
 
-// 2. CREATE: Colocar as coisas no ecrã quando o jogo arranca 
-function create() {
-    // Pinta o fundo de azul escuro para simular o espaço
-    this.cameras.main.setBackgroundColor('#0a0a2a');
-    
-    // É aqui que vais colocar: const minhaNave = this.physics.add.sprite(400, 500, 'nave');
-}
-
-// 3. UPDATE: Corre em loop contínuo (movimento, tiros, colisões) 
-function update() {
-    // É aqui que vais verificar as teclas: se a seta esquerda estiver premida, move a nave.
-}
