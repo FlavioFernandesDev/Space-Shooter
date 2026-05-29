@@ -4,6 +4,7 @@ import * as CONFIG from '../config.js';
 
 export class Player extends Phaser.GameObjects.Container {
     #keyBoardInputComponent;
+    #weaponComponent;
     #horizontalMovementComponent;
     #shipSprite;
     #shipEngineSprite;
@@ -28,18 +29,26 @@ export class Player extends Phaser.GameObjects.Container {
 
         this.#keyBoardInputComponent = new KeyboardInputComponent(this.scene);
         this.#horizontalMovementComponent = new HorizontalMovementComponent(this, this.#keyBoardInputComponent, CONFIG.PLAYER_MOVEMENT_HORIZONTAL_VELOCITY);
+        this.#weaponComponent = new WeaponComponent(this, this.#keyBoardInputComponent, {
+             speed: CONFIG.PLAYER_BULLET_SPEED,
+             interval: CONFIG.PLAYER_BULLET_INTERVAL,
+             lifespan: CONFIG.PLAYER_BULLET_LIFESPAN,
+             maxCount: CONFIG.PLAYER_BULLETS_MAX_COUNT,
+             yOffset: -20,
+             flipY:  false, 
+            });
         
 
-        this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
-        this.once(Phaser.GameObjects.Events.DESTROY, () => { 
+            this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
+            this.once(Phaser.GameObjects.Events.DESTROY, () => { 
             this.scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);      
-    }, this)
+        }, this)
 }
 
     update(ts, dt){
       this.#keyBoardInputComponent.update();
       this.#horizontalMovementComponent.update();
-      this.#verticalMovementComponent.update();
+      this.#weaponComponent.update(dt);
 
     }
 }
