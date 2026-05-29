@@ -5,6 +5,7 @@ import * as CONFIG from '../../config.js';
 
 export class FighterEnemy extends Pasher.GameObjects.Container{
         #inputComponent;
+        #weaponComponent;
         #verticalMovementComponent;
         #shipSprite;
         #shipEngineSprite;
@@ -26,6 +27,14 @@ export class FighterEnemy extends Pasher.GameObjects.Container{
     
             this.#inputComponent = new BotScoutInputComponent();
             this.#verticalMovementComponent = new VerticalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_FIGHTER_VERTICAL_VELOCITY);
+            this.#weaponComponent = new WeaponComponent(this, this.#inputComponent, {
+                speed: CONFIG.ENEMY_FIGHTER_BULLET_SPEED,
+                interval: CONFIG.ENEMY_FIGHTER_BULLET_INTERVAL,
+                lifespan: CONFIG.ENEMY_FIGHTER_BULLET_LIFESPAN,
+                maxCount: CONFIG.ENEMY_FIGHTER_BULLETS_MAX_COUNT,
+                yOffset: 10,
+                flipY:  true, 
+               });
            
             this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
             this.once(Phaser.GameObjects.Events.DESTROY, () => { 
@@ -36,6 +45,7 @@ export class FighterEnemy extends Pasher.GameObjects.Container{
         update(ts, dt){
           this.#inputComponent.update();
           this.#verticalMovementComponent.update();
+          this.#weaponComponent.update(dt);
     
         }
 }
