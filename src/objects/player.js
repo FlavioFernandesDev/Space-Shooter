@@ -1,11 +1,16 @@
+import { ColliderComponent } from '../components/collider/collider-component.js';
+import { HealthComponent } from '../components/health/health-component.js';
 import { KeyboardInputComponent } from '../components/inputs/keyboard-input-component.js';
 import { HorizontalMovementComponent } from '../components/movements/horizontal-movement-component.js';
+import { WeaponComponent } from '../components/weapon/weapon-component.js';
 import * as CONFIG from '../config.js';
 
 export class Player extends Phaser.GameObjects.Container {
     #keyBoardInputComponent;
     #weaponComponent;
     #horizontalMovementComponent;
+    #healthComponent;
+    #colliderComponent;
     #shipSprite;
     #shipEngineSprite;
     #shipEngineThrusterSprite;
@@ -37,6 +42,9 @@ export class Player extends Phaser.GameObjects.Container {
              yOffset: -20,
              flipY:  false, 
             });
+
+            this.#healthComponent = new HealthComponent(CONFIG.PLAYER_HEALTH);
+            this.#colliderComponent = new ColliderComponent(this.#healthComponent);
         
 
             this.scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
@@ -45,10 +53,46 @@ export class Player extends Phaser.GameObjects.Container {
         }, this)
 }
 
+    get weaponGameObjectGroup() {
+        return this.#weaponComponent.bulletGroup;
+    }
+
+    get colliderComponent() {
+        return this.#colliderComponent;
+    }
+
+    get weaponComponent() {
+        return this.#weaponComponent;
+    }
+    
+
     update(ts, dt){
+        if (!this.active){
+            return;
+        }
+
+        if (this.#healthComponent.isDead) {
+            this.#hide();
+            this.setVisible(true);
+            this.#shipSprite.play({
+                key: 'explosion'
+            });
+            return;
+
+        }
+
+      this.#shipSprite.setFrame((CONFIG.PLAYER_HEALTH - this.#healthComponent.life).toString(10));
       this.#keyBoardInputComponent.update();
       this.#horizontalMovementComponent.update();
       this.#weaponComponent.update(dt);
 
+    }
+
+    #hide(){
+        this.setActive(false);
+        this.setVisible(false);
+        this.#shipEngineSprite.setVisible(false);
+        this.#shipEngineThrusterSprite.setVisible(false);
+        this.#keyBoardInputComponent.lockInput = true;
     }
 }
