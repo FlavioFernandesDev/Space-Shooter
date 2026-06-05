@@ -19,7 +19,7 @@ const config = {
         default: 'arcade', // Usar o sistema de física Arcade
         arcade: {
             gravity: { y: 0, x: 0 }, 
-            debug: true, // Mostra as caixas de colisão. Lembra-te de meter 'false' na entrega final!
+            debug: false, // Mostra as caixas de colisão. Lembra-te de meter 'false' na entrega final!
         }
     }
 };
