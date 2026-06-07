@@ -2,10 +2,11 @@ import { EnemySpawnerComponent } from '../components/spawners/enemy-spawner-comp
 import { FighterEnemy } from '../objects/enemies/fighter-enemy.js'; 
 import { ScoutEnemy } from '../objects/enemies/scout-enemy.js';
 import { Player } from '../objects/player.js';
-import { EventBusComponent } from '../components/events/event-bus-component.js';
+import { EventBusComponent, CUSTOM_EVENTS } from '../components/events/event-bus-component.js';
 import { EnemyDestroyedComponent } from '../components/spawners/enemy-destroyed-component.js';
 import { Score } from '../objects/UI/score.js';
 import { Lives } from '../objects/UI/lives.js';
+import { AudioManager } from '../objects/audio-manager.js';
 import * as CONFIG from '../config.js';
 
 export class GameScene extends Phaser.Scene {
@@ -111,6 +112,7 @@ this.physics.add.overlap(fighterSpawner.phaserGroup, player.weaponGameObjectGrou
 
 new Score(this, eventBusComponent);
 new Lives(this, eventBusComponent);
+new AudioManager(this, eventBusComponent);
 
 
 }

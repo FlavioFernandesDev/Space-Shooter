@@ -31,6 +31,7 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
         this.#shipEngineSprite = scene.add.sprite(0, 0, 'fighter_engine').setFlipY(true);
         this.#shipEngineSprite.play('fighter_engine');
         this.add([this.#shipEngineSprite, this.#shipSprite]);
+        
 
        
 
@@ -79,10 +80,10 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
             maxCount: CONFIG.ENEMY_FIGHTER_BULLETS_MAX_COUNT,
             yOffset: 10,
             flipY: true, 
-        });
+        }, this.#eventBusComponent);
        
         this.#healthComponent = new HealthComponent(CONFIG.ENEMY_FIGHTER_HEALTH);
-        this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+        this.#colliderComponent = new ColliderComponent(this.#healthComponent, this.#eventBusComponent);
         this.#eventBusComponent.emit(CUSTOM_EVENTS.ENEMY_INIT, this);
         this.#isInitialized = true;
 

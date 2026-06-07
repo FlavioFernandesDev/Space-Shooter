@@ -44,10 +44,10 @@ export class Player extends Phaser.GameObjects.Container {
              maxCount: CONFIG.PLAYER_BULLETS_MAX_COUNT,
              yOffset: -20,
              flipY:  false, 
-            });
+            }, this.#eventBusComponent);
 
             this.#healthComponent = new HealthComponent(CONFIG.PLAYER_HEALTH);
-            this.#colliderComponent = new ColliderComponent(this.#healthComponent);
+            this.#colliderComponent = new ColliderComponent(this.#healthComponent, this.#eventBusComponent);
 
             this.#hide();
             this.#eventBusComponent.on(CUSTOM_EVENTS.PLAYER_SPAWN, this.#spawn, this);
