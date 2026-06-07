@@ -58,14 +58,9 @@ export class EnemySpawnerComponent {
     
     const x = Phaser.Math.Between(30, this.#scene.scale.width - 30);
     const enemy = this.#group.get(x, -20); 
-
-    if (enemy.init) {
-            enemy.init(this.#eventBusComponent);
-        }
-        
+   
     enemy.reset();
     this.#spawnAt = this.#spawnInterval;
-
     }
 
     worldstep(delta) {

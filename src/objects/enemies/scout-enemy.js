@@ -27,12 +27,10 @@ export class ScoutEnemy extends Phaser.GameObjects.Container {
         this.body.setSize(24, 24);
         this.body.setOffset(-12, -12);
         
-        this.#shipSprite = scene.add.sprite(0, 0, 'scout', 0);
-        this.#shipEngineSprite = scene.add.sprite(0, 0, 'scout_engine').setFlipY(true);
+        
+        this.#shipSprite = scene.make.sprite({ x: 0, y: 0, key: 'scout', frame: 0, add: false });
+        this.#shipEngineSprite = scene.make.sprite({ x: 0, y: 0, key: 'scout_engine', add: false }).setFlipY(true);
         this.#shipEngineSprite.play('scout_engine');
-        
-        
-        
         this.add([this.#shipEngineSprite, this.#shipSprite]);
 
        
@@ -64,8 +62,8 @@ export class ScoutEnemy extends Phaser.GameObjects.Container {
         this.#eventBusComponent = eventBusComponent;
         this.#inputComponent = new BotScoutInputComponent(this);
 
-        this.#horizontalMovementComponent = new HorizontalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_SCOUT_HORIZONTAL_VELOCITY);
-        this.#verticalMovementComponent = new VerticalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_SCOUT_VERTICAL_VELOCITY);
+        this.#horizontalMovementComponent = new HorizontalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_SCOUT_MOVEMENT_HORIZONTAL_VELOCITY);
+        this.#verticalMovementComponent = new VerticalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_SCOUT_MOVEMENT_VERTICAL_VELOCITY);
 
         this.#healthComponent = new HealthComponent(CONFIG.ENEMY_SCOUT_HEALTH);
         this.#colliderComponent = new ColliderComponent(this.#healthComponent, this.#eventBusComponent);

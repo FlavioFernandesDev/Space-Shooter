@@ -4,7 +4,7 @@ export class BotFighterInputComponent extends InputComponent {
     constructor(){
         super();
         this._down = true;
-        this.shoot = true;
+        this._shoot = true;
     }
 
     update(){
