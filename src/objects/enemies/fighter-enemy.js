@@ -25,10 +25,10 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
         this.scene.physics.add.existing(this);
         this.body.setSize(24, 24);
         this.body.setOffset(-12, -12);
+        
 
-        // Criar os sprites reais que existem na pasta
-        this.#shipSprite = scene.add.sprite(0, 0, 'fighter', 0);
-        this.#shipEngineSprite = scene.add.sprite(0, 0, 'fighter_engine').setFlipY(true);
+        this.#shipSprite = scene.make.sprite({ x: 0, y: 0, key: 'fighter', frame: 0, add: false });
+        this.#shipEngineSprite = scene.make.sprite({ x: 0, y: 0, key: 'fighter_engine', add: false }).setFlipY(true);
         this.#shipEngineSprite.play('fighter_engine');
         this.add([this.#shipEngineSprite, this.#shipSprite]);
         
@@ -71,7 +71,7 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
 
         this.#inputComponent = new BotFighterInputComponent(this);
 
-        this.#verticalMovementComponent = new VerticalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_FIGHTER_VERTICAL_VELOCITY);
+        this.#verticalMovementComponent = new VerticalMovementComponent(this, this.#inputComponent, CONFIG.ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY);
         
         this.#weaponComponent = new WeaponComponent(this, this.#inputComponent, {
             speed: CONFIG.ENEMY_FIGHTER_BULLET_SPEED,
