@@ -4,6 +4,8 @@ import { ScoutEnemy } from '../objects/enemies/scout-enemy.js';
 import { Player } from '../objects/player.js';
 import { EventBusComponent } from '../components/events/event-bus-component.js';
 import { EnemyDestroyedComponent } from '../components/spawners/enemy-destroyed-component.js';
+import { Score } from '../objects/UI/score.js';
+import { Lives } from '../objects/UI/lives.js';
 import * as CONFIG from '../config.js';
 
 export class GameScene extends Phaser.Scene {
@@ -17,9 +19,14 @@ export class GameScene extends Phaser.Scene {
     }
 
     create() {
+
+        this.add.sprite(0,0,'bg1',0).setOrigin(0,1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg1');
+        this.add.sprite(0,0,'bg2',0).setOrigin(0,1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg2');
+        this.add.sprite(0,0,'bg3',0).setOrigin(0,1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg3');
+        
         const CUSTOM_EVENTS = { ENEMY_INIT: 'enemy-init' };
         const eventBusComponent = new EventBusComponent();
-        const player = new Player(this);
+        const player = new Player(this, eventBusComponent);
 
         const scoutSpawner = new EnemySpawnerComponent(this,
             ScoutEnemy,
@@ -101,6 +108,10 @@ this.physics.add.overlap(fighterSpawner.phaserGroup, player.weaponGameObjectGrou
     player.weaponComponent.destroyBullet(projectileGameObject);
     enemyGameObject.colliderComponent.collideWithPlayerProjectile();
 });
+
+new Score(this, eventBusComponent);
+new Lives(this, eventBusComponent);
+
 
 }
     
