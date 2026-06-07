@@ -49,32 +49,27 @@ export class GameScene extends Phaser.Scene {
 
         new EnemyDestroyedComponent(this, eventBusComponent);
 
-
-
-
-        //const enemy = new ScoutEnemy(this, this.scale.width / 2, 20);
-        //const enemy = new FighterEnemy(this, this.scale.width / 2, 20);
         
 
-this.physics.add.overlap(player, scoutSpawner.phaserGroup, (playerGameObject, enemyGameObject) => {
+    this.physics.add.overlap(player, scoutSpawner.phaserGroup, (playerGameObject, enemyGameObject) => {
     if(!playerGameObject.active || !enemyGameObject.active){
         return;
     }
 
     playerGameObject.colliderComponent.collideWithEnemyShip();
     enemyGameObject.colliderComponent.collideWithPlayerShip();
-});
+    });
 
-this.physics.add.overlap(player, fighterSpawner.phaserGroup, (playerGameObject, enemyGameObject) => {
+    this.physics.add.overlap(player, fighterSpawner.phaserGroup, (playerGameObject, enemyGameObject) => {
     if(!playerGameObject.active || !enemyGameObject.active){
         return;
     }
 
     playerGameObject.colliderComponent.collideWithEnemyShip();
     enemyGameObject.colliderComponent.collideWithPlayerShip();
-});
+    });
 
-eventBusComponent.on(CUSTOM_EVENTS.ENEMY_INIT, (gameObject) => {
+        eventBusComponent.on(CUSTOM_EVENTS.ENEMY_INIT, (gameObject) => {
     if(gameObject.constructor.name !== 'FighterEnemy'){
         return;
     }
@@ -87,34 +82,34 @@ eventBusComponent.on(CUSTOM_EVENTS.ENEMY_INIT, (gameObject) => {
     gameObject.weaponComponent.destroyBullet(projectileGameObject);
     playerGameObject.colliderComponent.collideWithEnemyProjectile();
     });
-});
+    });
 
 
 
 
-this.physics.add.overlap(scoutSpawner.phaserGroup, player.weaponGameObjectGroup, (enemyGameObject, projectileGameObject) => {
+    this.physics.add.overlap(scoutSpawner.phaserGroup, player.weaponGameObjectGroup, (enemyGameObject, projectileGameObject) => {
       if(!enemyGameObject.active || !projectileGameObject.active){
         return;
     }
 
     player.weaponComponent.destroyBullet(projectileGameObject);
     enemyGameObject.colliderComponent.collideWithPlayerProjectile();
-});
+    });
 
-this.physics.add.overlap(fighterSpawner.phaserGroup, player.weaponGameObjectGroup, (enemyGameObject, projectileGameObject) => {
+    this.physics.add.overlap(fighterSpawner.phaserGroup, player.weaponGameObjectGroup, (enemyGameObject, projectileGameObject) => {
       if(!enemyGameObject.active || !projectileGameObject.active){
         return;
     }
 
     player.weaponComponent.destroyBullet(projectileGameObject);
     enemyGameObject.colliderComponent.collideWithPlayerProjectile();
-});
+    });
 
-new Score(this, eventBusComponent);
-new Lives(this, eventBusComponent);
-new AudioManager(this, eventBusComponent);
+    new Score(this, eventBusComponent);
+    new Lives(this, eventBusComponent);
+    new AudioManager(this, eventBusComponent);
 
-eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
+    eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
     this.add.text(
         this.scale.width / 2, 
         this.scale.height / 2 + 40, 
