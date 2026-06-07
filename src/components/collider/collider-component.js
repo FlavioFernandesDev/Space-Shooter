@@ -1,8 +1,12 @@
+import { EventBusComponent, CUSTOM_EVENTS, } from "../events/event-bus-component.js";
+
 export class ColliderComponent {
     #healthComponent;
+    #eventBusComponent;
 
-    constructor(healthComponent) {
+    constructor(healthComponent, eventBusComponent) {
         this.#healthComponent = healthComponent;
+        this.#eventBusComponent = eventBusComponent;
     }
 
     // 1. Quando o Jogador bate no Inimigo (Ativado no Player)
@@ -19,6 +23,8 @@ export class ColliderComponent {
             return;
         }
         this.#healthComponent.hit();
+        this.#eventBusComponent.emit(CUSTOM_EVENTS.SHIP_HIT);
+
     }
 
     // 3. Quando o Inimigo bate no Jogador (Ativado no Enemy) 
