@@ -114,6 +114,21 @@ new Score(this, eventBusComponent);
 new Lives(this, eventBusComponent);
 new AudioManager(this, eventBusComponent);
 
+eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
+    this.add.text(
+        this.scale.width / 2, 
+        this.scale.height / 2 + 40, 
+        'Prima R para reiniciar', 
+        { fontSize: '16px', fill: '#ffffff' }
+    ).setOrigin(0.5).setDepth(10);
+
+    this.input.keyboard.once('keydown-R', () => {
+        this.sound.stopAll();
+        this.scene.restart();
+        
+    });
+});
+
 
 }
     
