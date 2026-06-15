@@ -27,21 +27,25 @@ export class EnemySpawnerComponent {
         this.#scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
         this.#scene.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);
         
-        
         this.#scene.events.once(
             Phaser.Scenes.Events.SHUTDOWN, 
             () => {
                 this.#scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
-
-                if(this.#scene.physics  && this.#scene.physics.world) {
-                    this.#scene.physics.world.off(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);
-                }     
+                if (this.#scene.physics && this.#scene.physics.world) {
+                    this.#scene.physics.world.off(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);      
+                }
             }, 
             this
         );
         
         eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
             this.#disableSpawning = true;
+        });
+
+        // Escuta o apito da pontuação e aumenta a dificuldade
+        eventBusComponent.on(CUSTOM_EVENTS.LEVEL_UP, () => {
+            // Corta o tempo de spawn em 15%, tornando-o mais rápido, até um limite de 600ms
+            this.#spawnInterval = Math.max(600, this.#spawnInterval * 0.85);
         });
     }
 
@@ -60,7 +64,6 @@ export class EnemySpawnerComponent {
         }
     
         const x = Phaser.Math.Between(30, this.#scene.scale.width - 30);
-        
         
         const enemy = this.#group.get(); 
 
