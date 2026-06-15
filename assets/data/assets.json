@@ -85,27 +85,27 @@
       {
         "type": "audio",
         "key": "explosion",
-        "url": "explosion.wav"
+        "url": "explosion.mp3"
       },
       {
         "type": "audio",
         "key": "hit",
-        "url": "hit.wav"
+        "url": "hit.mp3"
       },
       {
         "type": "audio",
         "key": "shot1",
-        "url": "shot_1.wav"
+        "url": "shot_1.mp3"
       },
       {
         "type": "audio",
         "key": "shot2",
-        "url": "shot_2.wav"
+        "url": "shot_2.mp3"
       },
       {
         "type": "audio",
         "key": "bg",
-        "url": "space_asteroids.wav"
+        "url": "space_asteroids.mp3"
       }
     ]
   }
