@@ -4,28 +4,45 @@ export class MenuScene extends Phaser.Scene {
     }
 
     create() {
-        // Colocamos o fundo animado para dar vida ao menu
+        //Vai buscar a língua e o dicionário
+        const lang = this.registry.get('lang');
+        const t = this.cache.json.get('translations')[lang];
+
         this.add.sprite(0, 0, 'bg1', 0).setOrigin(0, 1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg1');
         
-        const centerX = this.scale.width / 2;
-        const centerY = this.scale.height / 2;
+        const centerX = Math.floor(this.scale.width / 2);
+        const centerY = Math.floor(this.scale.height / 2);
 
-        // O Título do jogo
-        this.add.text(centerX, centerY - 50, 'SPACE DEFENDER', {
-            fontSize: '48px',
-            fill: '#ffffff',
-            fontStyle: 'bold'
+        
+        this.add.text(centerX, centerY - 50, t.MENU_TITLE, {
+            fontSize: '48px', fill: '#ffffff', fontStyle: 'bold', resolution: 2
         }).setOrigin(0.5);
 
-        // A instrução a piscar e com cor diferente
-        this.add.text(centerX, centerY + 50, 'Prime [ESPAÇO] para Começar', {
-            fontSize: '24px',
-            fill: '#ffff00'
+        this.add.text(centerX, centerY + 50, t.MENU_START, {
+            fontSize: '24px', fill: '#ffff00', resolution: 2
         }).setOrigin(0.5);
 
-        // Fica à espera da tecla Espaço para arrancar o jogo
+        // 1. Forçamos o arredondamento para o píxel inteiro mais próximo
+        const langTextX = Math.floor(centerX);
+        const langTextY = Math.floor(centerY + 90);
+
+        const langText = this.add.text(langTextX, langTextY, t.MENU_LANG, {
+        fontSize: '20px', 
+        fill: '#aaaaaa', 
+        resolution: 4 
+        }).setOrigin(0.5);
+
+
         this.input.keyboard.once('keydown-SPACE', () => {
             this.scene.start('GameScene');
+        });
+
+        // 3Botão para trocar de língua
+        this.input.keyboard.on('keydown-L', () => {
+            // Se for 'pt' passa a 'en', se for 'en' passa a 'pt'
+            const newLang = lang === 'pt' ? 'en' : 'pt'; 
+            this.registry.set('lang', newLang); // Grava a nova língua
+            this.scene.restart(); // Reinicia o ecrã para desenhar as letras novas
         });
     }
 }

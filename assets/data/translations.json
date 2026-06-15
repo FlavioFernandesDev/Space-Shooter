@@ -1,0 +1,24 @@
+{
+  "pt": {
+    "MENU_TITLE": "SPACE DEFENDER",
+    "MENU_START": "Prime [ESPAÇO] para Começar",
+    "MENU_LANG": "Língua: PT (Prime [L] para mudar)",
+    "PAUSE_TITLE": "PAUSA",
+    "PAUSE_RESUME": "Prime [P] para continuar",
+    "PAUSE_MENU": "Prime [M] para o Menu",
+    "GAME_OVER_TITLE": "Fim de Jogo",
+    "GAME_OVER_RESTART": "Prime [R] para Reiniciar",
+    "GAME_OVER_MENU": "Prime [M] para o Menu"
+  },
+  "en": {
+    "MENU_TITLE": "SPACE DEFENDER",
+    "MENU_START": "Press [SPACE] to Start",
+    "MENU_LANG": "Lang: EN (Press [L] to change)",
+    "PAUSE_TITLE": "PAUSED",
+    "PAUSE_RESUME": "Press [P] to Resume",
+    "PAUSE_MENU": "Press [M] to Menu",
+    "GAME_OVER_TITLE": "GAME OVER",
+    "GAME_OVER_RESTART": "Press [R] to Restart",
+    "GAME_OVER_MENU": "Press [M] to Menu"
+  }
+}
