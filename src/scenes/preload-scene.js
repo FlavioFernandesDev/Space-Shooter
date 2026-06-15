@@ -5,10 +5,12 @@ export class PreloadScene extends Phaser.Scene {
     
     preload() {
         this.load.pack('assets_pack', 'assets/data/assets.json');
+        this.load.json('translations', 'assets/data/translations.json');
     }
 
     create() {
         this.#createAnimations();
+        this.registry.set('lang', 'pt');
         this.scene.start('MenuScene');
     }
 

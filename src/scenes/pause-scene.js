@@ -4,35 +4,35 @@ export class PauseScene extends Phaser.Scene {
     }
 
     create() {
-        // Fundo escuro semitransparente para dar o efeito de pausa
+        const lang = this.registry.get('lang');
+        const t = this.cache.json.get('translations')[lang];
+
         this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0.7).setOrigin(0);
 
-        const centerX = this.scale.width / 2;
-        const centerY = this.scale.height / 2;
+        const centerX = Math.floor(this.scale.width / 2);
+        const centerY = Math.floor(this.scale.height / 2);
 
-        this.add.text(centerX, centerY - 30, 'PAUSA', {
-            fontSize: '40px', fill: '#ffffff', fontStyle: 'bold'
+        this.add.text(centerX, centerY - 30, t.PAUSE_TITLE, {
+            fontSize: '40px', fill: '#ffffff', fontStyle: 'bold', resolution: 2
         }).setOrigin(0.5);
 
-        this.add.text(centerX, centerY + 30, 'Prime [P] para continuar', {
-            fontSize: '20px', fill: '#aaaaaa'
+        this.add.text(centerX, centerY + 30, t.PAUSE_RESUME, {
+            fontSize: '20px', fill: '#aaaaaa', resolution: 2
         }).setOrigin(0.5);
 
-        this.add.text(centerX, centerY + 70, 'Prime [M] para o Menu', {
-            fontSize: '20px', fill: '#aaaaaa'
+        this.add.text(centerX, centerY + 70, t.PAUSE_MENU, {
+            fontSize: '20px', fill: '#aaaaaa', resolution: 2
         }).setOrigin(0.5);
 
-        // Se carregar P, o jogo retoma
         this.input.keyboard.on('keydown-P', () => {
             this.scene.resume('GameScene');
-            this.scene.stop(); // Fecha o ecrã de pausa
+            this.scene.stop();
         });
 
-        // Se carregar M, volta ao Menu Principal
         this.input.keyboard.on('keydown-M', () => {
             this.sound.stopAll();
-            this.scene.stop('GameScene'); // Mata o jogo que estava a correr por trás
-            this.scene.start('MenuScene'); // Vai para o menu
+            this.scene.stop('GameScene');
+            this.scene.start('MenuScene');
         });
     }
 }
