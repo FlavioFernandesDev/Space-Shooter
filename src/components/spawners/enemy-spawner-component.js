@@ -8,7 +8,7 @@ export class EnemySpawnerComponent {
     #eventBusComponent;
     #disableSpawning;
 
-    constructor(scene, enemyClass, spawnConfig,eventBusComponent) {
+    constructor(scene, enemyClass, spawnConfig, eventBusComponent) {
         this.#eventBusComponent = eventBusComponent;
         this.#scene = scene;
         this.#group = this.#scene.add.group({
@@ -16,7 +16,6 @@ export class EnemySpawnerComponent {
             classType: enemyClass,
             runChildUpdate: true,
             createCallback: (enemy) => {
-                console.log(enemy);
                 enemy.init(this.#eventBusComponent);
             },
         });
@@ -27,24 +26,28 @@ export class EnemySpawnerComponent {
 
         this.#scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
         this.#scene.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);
+        
+        
         this.#scene.events.once(
-            Phaser.Scenes.Events.DESTROY, 
+            Phaser.Scenes.Events.SHUTDOWN, 
             () => {
-            this.#scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
-            this.#scene.physics.world.off(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);      
-        }, 
-        this
-    );
-    eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
-        this.#disableSpawning = true;
-    });
-}
+                this.#scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
+
+                if(this.#scene.physics  && this.#scene.physics.world) {
+                    this.#scene.physics.world.off(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);
+                }     
+            }, 
+            this
+        );
+        
+        eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
+            this.#disableSpawning = true;
+        });
+    }
 
     get phaserGroup() {
         return this.#group;
     }
-
-
 
     update(ts, dt) {
         if (this.#disableSpawning) {
@@ -56,11 +59,20 @@ export class EnemySpawnerComponent {
             return;
         }
     
-    const x = Phaser.Math.Between(30, this.#scene.scale.width - 30);
-    const enemy = this.#group.get(x, -20); 
-   
-    enemy.reset();
-    this.#spawnAt = this.#spawnInterval;
+        const x = Phaser.Math.Between(30, this.#scene.scale.width - 30);
+        
+        
+        const enemy = this.#group.get(); 
+
+        if (enemy) {
+            enemy.setPosition(x, -20);
+            if (enemy.body) {
+                enemy.body.reset(x, -20);
+            }
+            enemy.reset();
+        }
+        
+        this.#spawnAt = this.#spawnInterval;
     }
 
     worldstep(delta) {

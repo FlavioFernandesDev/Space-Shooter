@@ -26,12 +26,6 @@ export class Lives extends Phaser.GameObjects.Container {
             })
             return;
             } 
-            this.scene.add
-            .text(this.scene.scale.width / 2, this.scene.scale.height / 2, 'Game Over', 
-            { fontSize: '24px', fill: '#fff' 
-
-            })
-            .setOrigin(0.5);
 
             this.#eventBusComponent.emit(CUSTOM_EVENTS.GAME_OVER);
         });
