@@ -110,22 +110,16 @@ export class GameScene extends Phaser.Scene {
     new AudioManager(this, eventBusComponent);
 
     eventBusComponent.on(CUSTOM_EVENTS.GAME_OVER, () => {
-    this.add.text(
-        this.scale.width / 2, 
-        this.scale.height / 2 + 40, 
-        'Prima R para reiniciar', 
-        { fontSize: '16px', fill: '#ffffff' }
-    ).setOrigin(0.5).setDepth(10);
-
-    this.input.keyboard.once('keydown-R', () => {
-        this.sound.stopAll();
-        this.scene.restart();
-        
+        this.scene.pause(); // Congela as naves e os tiros
+        this.scene.launch('GameOverScene'); // Abre o ecrã transparente por cima
     });
-});
 
+    this.input.keyboard.on('keydown-P', () => {
+            this.scene.pause();
+            this.scene.launch('PauseScene');
+        });
 
-}
+    }
     
 }
 
