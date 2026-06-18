@@ -22,9 +22,14 @@ export class MenuScene extends Phaser.Scene {
             fontSize: '24px', fill: '#ffff00', resolution: 2
         }).setOrigin(0.5);
 
+        const bestScore = this.registry.get('bestScore') || 0;
+        this.add.text(centerX, centerY + 88, t.MENU_BEST.replace('{score}', bestScore), {
+            fontSize: '18px', fill: '#39d7ff', resolution: 2
+        }).setOrigin(0.5);
+
         // 1. Forçamos o arredondamento para o píxel inteiro mais próximo
         const langTextX = Math.floor(centerX);
-        const langTextY = Math.floor(centerY + 90);
+        const langTextY = Math.floor(centerY + 122);
 
         const langText = this.add.text(langTextX, langTextY, t.MENU_LANG, {
         fontSize: '20px', 

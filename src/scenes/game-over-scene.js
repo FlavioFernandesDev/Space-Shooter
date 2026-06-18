@@ -11,16 +11,26 @@ export class GameOverScene extends Phaser.Scene {
 
         const centerX = Math.floor(this.scale.width / 2);
         const centerY = Math.floor(this.scale.height / 2);
+        const lastScore = this.registry.get('lastScore') || 0;
+        const bestScore = this.registry.get('bestScore') || 0;
 
-        this.add.text(centerX, centerY - 40, t.GAME_OVER_TITLE, {
+        this.add.text(centerX, centerY - 86, t.GAME_OVER_TITLE, {
             fontSize: '48px', fill: '#ff0000', fontStyle: 'bold', resolution: 2
         }).setOrigin(0.5);
 
-        this.add.text(centerX, centerY + 30, t.GAME_OVER_RESTART, {
+        this.add.text(centerX, centerY - 26, t.GAME_OVER_SCORE.replace('{score}', lastScore), {
+            fontSize: '22px', fill: '#ffffff', fontStyle: 'bold', resolution: 2
+        }).setOrigin(0.5);
+
+        this.add.text(centerX, centerY + 4, t.GAME_OVER_BEST.replace('{score}', bestScore), {
+            fontSize: '20px', fill: '#39d7ff', resolution: 2
+        }).setOrigin(0.5);
+
+        this.add.text(centerX, centerY + 56, t.GAME_OVER_RESTART, {
             fontSize: '20px', fill: '#ffffff', resolution: 2
         }).setOrigin(0.5);
 
-        this.add.text(centerX, centerY + 70, t.GAME_OVER_MENU, {
+        this.add.text(centerX, centerY + 94, t.GAME_OVER_MENU, {
             fontSize: '20px', fill: '#ffffff', resolution: 2
         }).setOrigin(0.5);
 

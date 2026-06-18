@@ -15,6 +15,10 @@ export class VerticalMovementComponent {
         this.#gameObject.body.setMaxVelocity(CONFIG.COMPONENT_MOVEMENT_VERTICAL_MAX_VELOCITY);
     }
 
+    set velocity(value) {
+        this.#velocity = value;
+    }
+
     reset() {
         this.#gameObject.body.velocity.y = 0;
         this.#gameObject.body.setAngularAcceleration(0);

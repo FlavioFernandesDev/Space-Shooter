@@ -2,23 +2,41 @@
   "pt": {
     "MENU_TITLE": "SPACE DEFENDER",
     "MENU_START": "Prime [ESPAÇO] para Começar",
+    "MENU_BEST": "Melhor: {score}",
     "MENU_LANG": "Língua: PT (Prime [L] para mudar)",
     "PAUSE_TITLE": "PAUSA",
     "PAUSE_RESUME": "Prime [P] para continuar",
     "PAUSE_MENU": "Prime [M] para o Menu",
     "GAME_OVER_TITLE": "Fim de Jogo",
+    "GAME_OVER_SCORE": "Pontuação: {score}",
+    "GAME_OVER_BEST": "Melhor: {score}",
     "GAME_OVER_RESTART": "Prime [R] para Reiniciar",
-    "GAME_OVER_MENU": "Prime [M] para o Menu"
+    "GAME_OVER_MENU": "Prime [M] para o Menu",
+    "HUD_LEVEL": "NIVEL",
+    "HUD_DIFFICULTY_UP": "DIFICULDADE AUMENTOU",
+    "HUD_BOSS_ALERT": "ALERTA BOSS",
+    "HUD_BOSS": "BOSS",
+    "STATUS_SHIELD": "ESCUDO",
+    "STATUS_DOUBLE_SHOT": "TIRO DUPLO"
   },
   "en": {
     "MENU_TITLE": "SPACE DEFENDER",
     "MENU_START": "Press [SPACE] to Start",
+    "MENU_BEST": "Best: {score}",
     "MENU_LANG": "Lang: EN (Press [L] to change)",
     "PAUSE_TITLE": "PAUSED",
     "PAUSE_RESUME": "Press [P] to Resume",
     "PAUSE_MENU": "Press [M] to Menu",
     "GAME_OVER_TITLE": "GAME OVER",
+    "GAME_OVER_SCORE": "Score: {score}",
+    "GAME_OVER_BEST": "Best: {score}",
     "GAME_OVER_RESTART": "Press [R] to Restart",
-    "GAME_OVER_MENU": "Press [M] to Menu"
+    "GAME_OVER_MENU": "Press [M] to Menu",
+    "HUD_LEVEL": "LEVEL",
+    "HUD_DIFFICULTY_UP": "DIFFICULTY UP",
+    "HUD_BOSS_ALERT": "BOSS ALERT",
+    "HUD_BOSS": "BOSS",
+    "STATUS_SHIELD": "SHIELD",
+    "STATUS_DOUBLE_SHOT": "DOUBLE SHOT"
   }
 }
