@@ -1,3 +1,6 @@
+import { getStoredBestScore } from '../utils/score-storage.js';
+import * as CONFIG from '../config.js';
+
 export class PreloadScene extends Phaser.Scene {
     constructor() {
         super('PreloadScene');
@@ -11,6 +14,8 @@ export class PreloadScene extends Phaser.Scene {
     create() {
         this.#createAnimations();
         this.registry.set('lang', 'pt');
+        this.registry.set('lastScore', 0);
+        this.registry.set('bestScore', getStoredBestScore(this.#getStorage(), CONFIG.BEST_SCORE_STORAGE_KEY));
         this.scene.start('MenuScene');
     }
 
@@ -27,4 +32,12 @@ export class PreloadScene extends Phaser.Scene {
             });
         });
 }
+
+    #getStorage() {
+        if (typeof localStorage === 'undefined') {
+            return undefined;
+        }
+
+        return localStorage;
+    }
 }

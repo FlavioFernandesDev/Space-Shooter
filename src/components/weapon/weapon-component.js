@@ -7,6 +7,7 @@ export class WeaponComponent {
     #fireBulletInterval;
     #bulletConfig;
     #eventBusComponent;
+    #bulletOffsetsX;
 
     constructor(gameObject, inputComponent, bulletConfig, eventBusComponent) {
         this.#gameObject = gameObject;
@@ -14,6 +15,7 @@ export class WeaponComponent {
         this.#bulletConfig = bulletConfig;
         this.#eventBusComponent = eventBusComponent;
         this.#fireBulletInterval = 0; 
+        this.#bulletOffsetsX = this.#bulletConfig.bulletOffsetsX || [0];
 
         this.#bulletgroup = this.#gameObject.scene.physics.add.group({
             name: `bullets-${Phaser.Math.RND.uuid()}`,
@@ -38,6 +40,10 @@ export class WeaponComponent {
         return this.#bulletgroup;
     }
 
+    setBulletOffsets(offsets) {
+        this.#bulletOffsetsX = offsets;
+    }
+
     update(dt) {
         this.#fireBulletInterval -= dt;
 
@@ -46,24 +52,33 @@ export class WeaponComponent {
         }
 
         if (this.#inputComponent.shootIsDown) {
-            const bullet = this.#bulletgroup.getFirstDead();
-            if (bullet == undefined || bullet == null) { 
+            let bulletsFired = 0;
+
+            this.#bulletOffsetsX.forEach((offsetX) => {
+                const bullet = this.#bulletgroup.getFirstDead();
+                if (bullet == undefined || bullet == null) {
+                    return;
+                }
+
+                const x = this.#gameObject.x + offsetX;
+                const y = this.#gameObject.y + this.#bulletConfig.yOffset;
+                bullet.enableBody(true, x, y, true, true);
+                bullet.body.velocity.y -= this.#bulletConfig.speed;
+                bullet.setState(this.#bulletConfig.lifespan);
+                bullet.play('bullet');
+                
+                if (typeof bullet.setScale === 'function') {
+                    bullet.setScale(0.8);
+                }
+                
+                bullet.body.setSize(14, 18);
+                bullet.setFlipY(this.#bulletConfig.flipY);
+                bulletsFired += 1;
+            });
+
+            if (bulletsFired === 0) {
                 return;
             }
-            const x = this.#gameObject.x;
-            const y = this.#gameObject.y + this.#bulletConfig.yOffset;
-            bullet.enableBody(true, x, y, true, true);
-            bullet.body.velocity.y -= this.#bulletConfig.speed;
-            bullet.setState(this.#bulletConfig.lifespan);
-            bullet.play('bullet');
-            
-          
-            if (typeof bullet.setScale === 'function') {
-                bullet.setScale(0.8);
-            }
-            
-            bullet.body.setSize(14, 18);
-            bullet.setFlipY(this.#bulletConfig.flipY);
 
             this.#fireBulletInterval = this.#bulletConfig.interval;
             this.#eventBusComponent.emit(CUSTOM_EVENTS.SHIP_SHOOT);
@@ -83,7 +98,12 @@ export class WeaponComponent {
         }); 
     }
         destroyBullet(bullet){
+            if (!bullet || !bullet.active) {
+                return;
+            }
+
             bullet.setState(0);
+            bullet.disableBody(true, true);
         }
 
 }

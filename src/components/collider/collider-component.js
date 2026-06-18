@@ -3,10 +3,12 @@ import { EventBusComponent, CUSTOM_EVENTS, } from "../events/event-bus-component
 export class ColliderComponent {
     #healthComponent;
     #eventBusComponent;
+    #shieldComponent;
 
-    constructor(healthComponent, eventBusComponent) {
+    constructor(healthComponent, eventBusComponent, shieldComponent) {
         this.#healthComponent = healthComponent;
         this.#eventBusComponent = eventBusComponent;
+        this.#shieldComponent = shieldComponent;
     }
 
     // 1. Quando o Jogador bate no Inimigo (Ativado no Player)
@@ -14,6 +16,11 @@ export class ColliderComponent {
         if (this.#healthComponent.isDead) {
             return;
         }
+
+        if (this.#shieldComponent && this.#shieldComponent.absorbHit()) {
+            return;
+        }
+
         this.#healthComponent.die();
     }
 
@@ -22,6 +29,11 @@ export class ColliderComponent {
         if (this.#healthComponent.isDead) {
             return;
         }
+
+        if (this.#shieldComponent && this.#shieldComponent.absorbHit()) {
+            return;
+        }
+
         this.#healthComponent.hit();
         this.#eventBusComponent.emit(CUSTOM_EVENTS.SHIP_HIT);
 

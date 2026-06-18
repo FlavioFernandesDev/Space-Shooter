@@ -1,4 +1,5 @@
 import { EventBusComponent, CUSTOM_EVENTS } from '../events/event-bus-component.js';
+import * as CONFIG from '../../config.js';
 
 export class EnemySpawnerComponent {
     #scene;
@@ -7,6 +8,9 @@ export class EnemySpawnerComponent {
     #group;
     #eventBusComponent;
     #disableSpawning;
+    #pauseSpawning;
+    #minSpawnInterval;
+    #difficultyLevel;
 
     constructor(scene, enemyClass, spawnConfig, eventBusComponent) {
         this.#eventBusComponent = eventBusComponent;
@@ -23,6 +27,9 @@ export class EnemySpawnerComponent {
         this.#spawnInterval = spawnConfig.spawnInterval;
         this.#spawnAt = spawnConfig.spawnAt;
         this.#disableSpawning = false;
+        this.#pauseSpawning = false;
+        this.#minSpawnInterval = spawnConfig.minSpawnInterval || 600;
+        this.#difficultyLevel = 1;
 
         this.#scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
         this.#scene.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);
@@ -43,9 +50,20 @@ export class EnemySpawnerComponent {
         });
 
         // Escuta o apito da pontuação e aumenta a dificuldade
-        eventBusComponent.on(CUSTOM_EVENTS.LEVEL_UP, () => {
-            // Corta o tempo de spawn em 15%, tornando-o mais rápido, até um limite de 600ms
-            this.#spawnInterval = Math.max(600, this.#spawnInterval * 0.85);
+        eventBusComponent.on(CUSTOM_EVENTS.LEVEL_UP, (levelData) => {
+            this.#difficultyLevel = levelData?.level || this.#difficultyLevel + 1;
+            this.#spawnInterval = Math.max(this.#minSpawnInterval, this.#spawnInterval * CONFIG.DIFFICULTY_SPAWN_INTERVAL_MULTIPLIER);
+            this.#applyDifficultyToEnemies();
+        });
+
+        eventBusComponent.on(CUSTOM_EVENTS.BOSS_PHASE_STARTED, () => {
+            this.#pauseSpawning = true;
+            this.#clearActiveEnemies();
+        });
+
+        eventBusComponent.on(CUSTOM_EVENTS.BOSS_PHASE_ENDED, () => {
+            this.#pauseSpawning = false;
+            this.#spawnAt = 1200;
         });
     }
 
@@ -54,7 +72,7 @@ export class EnemySpawnerComponent {
     }
 
     update(ts, dt) {
-        if (this.#disableSpawning) {
+        if (this.#disableSpawning || this.#pauseSpawning) {
             return;
         }
         this.#spawnAt -= dt;
@@ -73,6 +91,7 @@ export class EnemySpawnerComponent {
                 enemy.body.reset(x, -20);
             }
             enemy.reset();
+            this.#applyDifficulty(enemy);
         }
         
         this.#spawnAt = this.#spawnInterval;
@@ -89,5 +108,36 @@ export class EnemySpawnerComponent {
                 enemy.setVisible(false);
             }
         });
+    }
+
+    #clearActiveEnemies() {
+        this.#group.getChildren().forEach((enemy) => {
+            enemy.setActive(false);
+            enemy.setVisible(false);
+
+            if (enemy.body) {
+                enemy.body.setVelocity(0, 0);
+            }
+
+            if (enemy.weaponGameObjectGroup) {
+                enemy.weaponGameObjectGroup.getChildren().forEach((bullet) => {
+                    if (bullet.active) {
+                        bullet.disableBody(true, true);
+                    }
+                });
+            }
+        });
+    }
+
+    #applyDifficultyToEnemies() {
+        this.#group.getChildren().forEach((enemy) => {
+            this.#applyDifficulty(enemy);
+        });
+    }
+
+    #applyDifficulty(enemy) {
+        if (enemy && typeof enemy.setDifficultyLevel === 'function') {
+            enemy.setDifficultyLevel(this.#difficultyLevel);
+        }
     }
 }
