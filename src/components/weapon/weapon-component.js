@@ -44,6 +44,15 @@ export class WeaponComponent {
         this.#bulletOffsetsX = offsets;
     }
 
+    setFireInterval(interval) {
+        if (!Number.isFinite(interval) || interval <= 0) {
+            return;
+        }
+
+        this.#bulletConfig.interval = interval;
+        this.#fireBulletInterval = Math.min(this.#fireBulletInterval, interval);
+    }
+
     update(dt) {
         this.#fireBulletInterval -= dt;
 

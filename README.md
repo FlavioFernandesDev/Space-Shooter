@@ -6,7 +6,7 @@ Space Defender é um jogo 2D em Phaser onde o jogador controla uma nave, desvia-
 
 - Movimento horizontal com as setas e disparo com `SPACE`.
 - Inimigos Scout e Fighter com padrões de movimento diferentes.
-- Dificuldade progressiva: a cada patamar de pontuação, os inimigos aparecem e movem-se mais depressa.
+- Dificuldade progressiva: a cada patamar de pontuação, os inimigos aparecem e movem-se mais depressa, e o Fighter dispara mais depressa até um limite.
 - Boss por pontuação, com barra de vida, alerta visual, rochas defensivas e disparo triplo.
 - Power-ups temporários: escudo e tiro duplo, com estado visível no HUD.
 - Sistema de vidas, pausa, game over, reinício e regresso ao menu.
