@@ -65,6 +65,7 @@ export class Player extends Phaser.GameObjects.Container {
 
         this.#hide();
         this.#eventBusComponent.on(CUSTOM_EVENTS.PLAYER_SPAWN, this.#spawn, this);
+        // o player recebe aqui os avisos dos power-ups
         this.#eventBusComponent.on(CUSTOM_EVENTS.POWER_UP_COLLECTED, this.#handlePowerUpCollected, this);
         this.#eventBusComponent.on(CUSTOM_EVENTS.SHIELD_CHANGED, this.#handleShieldChanged, this);
         this.#eventBusComponent.on(CUSTOM_EVENTS.SHIP_HIT, this.#flashOnHit, this);
@@ -113,6 +114,7 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     #hide() {
+        // usado quando o jogador ainda nao deve mexer
         this.setActive(false);
         this.setVisible(false);
         this.#shieldComponent.reset();
@@ -143,6 +145,7 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     #handlePowerUpCollected(type) {
+        // cada tipo de power-up ativa uma ajuda diferente
         if (type === 'shield') {
             this.#shieldComponent.activate(CONFIG.PLAYER_POWER_UP_DURATION);
             return;
@@ -181,6 +184,7 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     #activateDoubleShot() {
+        // muda os offsets para sairem duas balas
         this.#clearDoubleShotTimer();
         this.#doubleShotActive = true;
         this.#doubleShotExpiresAt = this.scene.time.now + CONFIG.PLAYER_POWER_UP_DURATION;
@@ -192,6 +196,7 @@ export class Player extends Phaser.GameObjects.Container {
             this.#resetDoubleShot();
         });
 
+        // este timer atualiza o HUD enquanto o power-up dura
         this.#doubleShotTickerEvent = this.scene.time.addEvent({
             delay: 250,
             loop: true,
@@ -201,6 +206,7 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     #resetDoubleShot() {
+        // volta ao tiro normal
         this.#clearDoubleShotTimer();
         this.#weaponComponent.setBulletOffsets([0]);
 
@@ -218,6 +224,7 @@ export class Player extends Phaser.GameObjects.Container {
     }
 
     #clearDoubleShotTimer() {
+        // evita timers antigos a continuar depois do power-up acabar
         if (this.#doubleShotTimerEvent) {
             this.#doubleShotTimerEvent.remove(false);
             this.#doubleShotTimerEvent = undefined;

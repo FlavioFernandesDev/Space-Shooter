@@ -31,6 +31,7 @@ export class GameScene extends Phaser.Scene {
         this.add.sprite(0,0,'bg3',0).setOrigin(0,1).setAlpha(0.7).setAngle(90).setScale(1, 1.25).play('bg3');
         
         
+        // o event bus passa avisos entre as partes do jogo
         const eventBusComponent = new EventBusComponent();
         const player = new Player(this, eventBusComponent);
 
@@ -59,6 +60,7 @@ export class GameScene extends Phaser.Scene {
 
         new EnemyDestroyedComponent(this, eventBusComponent);
 
+        // evita repetir a mesma colisao para scouts e fighters
         const addPlayerEnemyCollision = (enemyGroup) => {
             this.physics.add.overlap(player, enemyGroup, (playerGameObject, enemyGameObject) => {
                 if (!playerGameObject.active || !enemyGameObject.active) {
@@ -70,6 +72,7 @@ export class GameScene extends Phaser.Scene {
             });
         };
 
+        // colisao dos tiros do jogador com cada grupo de inimigos
         const addPlayerProjectileCollision = (enemyGroup) => {
             this.physics.add.overlap(enemyGroup, player.weaponGameObjectGroup, (enemyGameObject, projectileGameObject) => {
                 if (!enemyGameObject.active || !projectileGameObject.active) {
@@ -84,6 +87,7 @@ export class GameScene extends Phaser.Scene {
         addPlayerEnemyCollision(scoutSpawner.phaserGroup);
         addPlayerEnemyCollision(fighterSpawner.phaserGroup);
 
+        // quando apanha um power-up, o jogador trata do efeito pelo evento
         this.physics.add.overlap(player, powerUpSpawner.phaserGroup, (playerGameObject, powerUpGameObject) => {
             if (!playerGameObject.active || !powerUpGameObject.active) {
                 return;
@@ -93,6 +97,7 @@ export class GameScene extends Phaser.Scene {
             powerUpGameObject.collect();
         });
 
+        // cada inimigo com arma ganha colisao dos tiros com o jogador
         eventBusComponent.on(CUSTOM_EVENTS.ENEMY_INIT, (gameObject) => {
             if (!gameObject.weaponGameObjectGroup || !gameObject.weaponComponent) {
                 return;
@@ -111,6 +116,7 @@ export class GameScene extends Phaser.Scene {
         addPlayerProjectileCollision(scoutSpawner.phaserGroup);
         addPlayerProjectileCollision(fighterSpawner.phaserGroup);
 
+        // primeiro partimos as rochas que protegem o boss
         this.physics.add.overlap(bossSpawner.rockGroup, player.weaponGameObjectGroup, (rockGameObject, projectileGameObject) => {
             if (!rockGameObject.active || !projectileGameObject.active) {
                 return;
@@ -138,6 +144,7 @@ export class GameScene extends Phaser.Scene {
             playerGameObject.colliderComponent.collideWithEnemyProjectile();
         });
 
+        // o HUD fica a ouvir os eventos do jogo
         new Score(this, eventBusComponent);
         new Lives(this, eventBusComponent);
         new PowerUpStatus(this, eventBusComponent);

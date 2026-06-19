@@ -16,10 +16,10 @@ export class EnemySpawnerComponent {
         this.#eventBusComponent = eventBusComponent;
         this.#scene = scene;
         this.#group = this.#scene.add.group({
-            name: `${this.constructor.name}-${Phaser.Math.RND.uuid()}`,
             classType: enemyClass,
             runChildUpdate: true,
             createCallback: (enemy) => {
+                // cada inimigo recebe o mesmo event bus
                 enemy.init(this.#eventBusComponent);
             },
         });
@@ -31,12 +31,14 @@ export class EnemySpawnerComponent {
         this.#minSpawnInterval = spawnConfig.minSpawnInterval || 600;
         this.#difficultyLevel = 1;
 
+        // o update controla quando aparece o proximo inimigo
         this.#scene.events.on(Phaser.Scenes.Events.UPDATE, this.update, this);
         this.#scene.physics.world.on(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);
         
         this.#scene.events.once(
             Phaser.Scenes.Events.SHUTDOWN, 
             () => {
+                // ao sair da cena removemos os listeners
                 this.#scene.events.off(Phaser.Scenes.Events.UPDATE, this.update, this);
                 if (this.#scene.physics && this.#scene.physics.world) {
                     this.#scene.physics.world.off(Phaser.Physics.Arcade.Events.WORLD_STEP, this.worldstep, this);      
@@ -49,7 +51,7 @@ export class EnemySpawnerComponent {
             this.#disableSpawning = true;
         });
 
-        // Escuta o apito da pontuação e aumenta a dificuldade
+        // quando sobe de nivel, os inimigos aparecem mais depressa
         eventBusComponent.on(CUSTOM_EVENTS.LEVEL_UP, (levelData) => {
             this.#difficultyLevel = levelData?.level || this.#difficultyLevel + 1;
             this.#spawnInterval = Math.max(this.#minSpawnInterval, this.#spawnInterval * CONFIG.DIFFICULTY_SPAWN_INTERVAL_MULTIPLIER);
@@ -57,6 +59,7 @@ export class EnemySpawnerComponent {
         });
 
         eventBusComponent.on(CUSTOM_EVENTS.BOSS_PHASE_STARTED, () => {
+            // durante o boss paramos os inimigos normais
             this.#pauseSpawning = true;
             this.#clearActiveEnemies();
         });
@@ -75,6 +78,7 @@ export class EnemySpawnerComponent {
         if (this.#disableSpawning || this.#pauseSpawning) {
             return;
         }
+        // conta o tempo ate ao proximo spawn
         this.#spawnAt -= dt;
 
         if (this.#spawnAt > 0) {
@@ -83,6 +87,7 @@ export class EnemySpawnerComponent {
     
         const x = Phaser.Math.Between(30, this.#scene.scale.width - 30);
         
+        // reutiliza um inimigo que esteja livre
         const enemy = this.#group.get(); 
 
         if (enemy) {
@@ -98,6 +103,7 @@ export class EnemySpawnerComponent {
     }
 
     worldstep(delta) {
+        // tira inimigos que ja passaram o ecra
         this.#group.getChildren().forEach((enemy) => {
             if (!enemy.active) {
                 return;
@@ -111,6 +117,7 @@ export class EnemySpawnerComponent {
     }
 
     #clearActiveEnemies() {
+        // limpa inimigos e balas antes do boss entrar
         this.#group.getChildren().forEach((enemy) => {
             enemy.setActive(false);
             enemy.setVisible(false);
@@ -136,6 +143,7 @@ export class EnemySpawnerComponent {
     }
 
     #applyDifficulty(enemy) {
+        // so aplica se o inimigo souber mudar dificuldade
         if (enemy && typeof enemy.setDifficultyLevel === 'function') {
             enemy.setDifficultyLevel(this.#difficultyLevel);
         }

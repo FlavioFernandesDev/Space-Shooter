@@ -22,6 +22,7 @@ export class WeaponComponent {
             enable: false,
         });
 
+        // cria as balas uma vez para reutilizar durante o jogo
         this.#bulletgroup.createMultiple({
             key: 'bullet',
             quantity: this.#bulletConfig.maxCount,
@@ -45,6 +46,7 @@ export class WeaponComponent {
     }
 
     setFireInterval(interval) {
+        // usado quando a dificuldade muda o ritmo dos tiros
         if (!Number.isFinite(interval) || interval <= 0) {
             return;
         }
@@ -64,6 +66,7 @@ export class WeaponComponent {
             let bulletsFired = 0;
 
             this.#bulletOffsetsX.forEach((offsetX) => {
+                // reutiliza uma bala que ja nao esta ativa
                 const bullet = this.#bulletgroup.getFirstDead();
                 if (bullet == undefined || bullet == null) {
                     return;
@@ -95,6 +98,7 @@ export class WeaponComponent {
     }
 
     worldstep(delta) {
+        // as balas desaparecem depois do tempo definido
         this.#bulletgroup.getChildren().forEach(bullet => {
             if (!bullet.active) {
                 return;

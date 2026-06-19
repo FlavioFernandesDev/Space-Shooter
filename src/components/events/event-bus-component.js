@@ -1,3 +1,4 @@
+// nomes dos eventos usados para ligar as partes do jogo
 export const CUSTOM_EVENTS = Object.freeze({
     ENEMY_INIT: 'ENEMY_INIT',
     ENEMY_DESTROYED: 'ENEMY_DESTROYED',

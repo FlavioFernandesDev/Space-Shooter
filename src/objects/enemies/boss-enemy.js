@@ -50,6 +50,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
             runChildUpdate: true,
         });
 
+        // as rochas protegem o boss no inicio
         this.#createRocks();
 
         this.#bulletGroup = this.scene.physics.add.group({
@@ -153,6 +154,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
     }
 
     hitByPlayerProjectile() {
+        // enquanto houver rochas, o boss nao perde vida
         if (!this.active || this.#hasActiveRocks()) {
             return;
         }
@@ -198,6 +200,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
     }
 
     #createRocks() {
+        // cria as rochas uma vez e depois so as repoe
         for (let i = 0; i < 4; i++) {
             const rock = new BossRock(this.scene, 0, 0);
             this.#rockGroup.add(rock);
@@ -218,6 +221,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
     }
 
     #updateAttack(dt) {
+        // troca o padrao de ataque a cada cooldown
         this.#attackTimer -= dt;
 
         if (this.#attackTimer > 0) {
@@ -238,6 +242,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
         let bulletsFired = 0;
 
         pattern.bullets.forEach((bulletConfig) => {
+            // reutiliza uma bala livre do boss
             const bullet = this.#bulletGroup.getFirstDead();
             if (!bullet) {
                 return;
@@ -260,6 +265,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
     }
 
     #updateMovement(dt) {
+        // se ja estiver a mover, espera o tween acabar
         if (this.scene.tweens.isTweening(this)) {
             return;
         }
@@ -290,6 +296,7 @@ export class BossEnemy extends Phaser.GameObjects.Container {
     }
 
     #syncActiveRocksToBoss() {
+        // as rochas acompanham a posicao do boss
         const rockOffsets = this.#getRockOffsets();
 
         this.#rockGroup.getChildren().forEach((rock, index) => {

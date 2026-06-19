@@ -31,10 +31,12 @@ const BOSS_ATTACK_PATTERNS = Object.freeze([
 const BOSS_MOVE_POSITIONS = Object.freeze([0.35, 0.65, 0.5, 0.25, 0.75]);
 
 export function getBossAttackPattern(patternIndex) {
+    // usa o resto da divisao para repetir os padroes
     return BOSS_ATTACK_PATTERNS[patternIndex % BOSS_ATTACK_PATTERNS.length];
 }
 
 export function getNextBossMoveTargetX(currentX, sceneWidth, moveIndex, margin) {
+    // escolhe uma posicao dentro das margens do ecra
     const safeWidth = Math.max(sceneWidth, margin * 2);
     const minX = margin;
     const maxX = safeWidth - margin;

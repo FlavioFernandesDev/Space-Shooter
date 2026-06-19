@@ -22,6 +22,7 @@ export class ShieldComponent {
     }
 
     activate(duration) {
+        // se apanhar outro escudo, reinicia o tempo
         this.#clearTimer();
         this.#active = true;
         this.#expiresAt = this.#scene.time.now + duration;
@@ -41,6 +42,7 @@ export class ShieldComponent {
     }
 
     absorbHit() {
+        // o escudo gasta-se quando bloqueia um golpe
         if (!this.#active) {
             return false;
         }
@@ -81,6 +83,7 @@ export class ShieldComponent {
     }
 
     #emitTimer() {
+        // manda para o HUD o tempo que falta
         if (!this.#active) {
             return;
         }
