@@ -4,7 +4,7 @@ import { BotFighterInputComponent } from '../../components/inputs/bot-fighter-in
 import { VerticalMovementComponent } from '../../components/movements/vertical-movement-component.js';
 import { WeaponComponent } from '../../components/weapon/weapon-component.js';
 import { CUSTOM_EVENTS } from '../../components/events/event-bus-component.js';
-import { getEnemyVelocityForLevel } from '../../utils/enemy-difficulty.js';
+import { getEnemyFireIntervalForLevel, getEnemyVelocityForLevel } from '../../utils/enemy-difficulty.js';
 import * as CONFIG from '../../config.js';
 
 export class FighterEnemy extends Phaser.GameObjects.Container {
@@ -99,16 +99,23 @@ export class FighterEnemy extends Phaser.GameObjects.Container {
     }
 
     setDifficultyLevel(level) {
-        if (!this.#verticalMovementComponent) {
-            return;
+        if (this.#verticalMovementComponent) {
+            this.#verticalMovementComponent.velocity = getEnemyVelocityForLevel(
+                CONFIG.ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY,
+                level,
+                CONFIG.DIFFICULTY_ENEMY_SPEED_LEVEL_MULTIPLIER,
+                CONFIG.DIFFICULTY_ENEMY_SPEED_MAX_MULTIPLIER
+            );
         }
 
-        this.#verticalMovementComponent.velocity = getEnemyVelocityForLevel(
-            CONFIG.ENEMY_FIGHTER_MOVEMENT_VERTICAL_VELOCITY,
-            level,
-            CONFIG.DIFFICULTY_ENEMY_SPEED_LEVEL_MULTIPLIER,
-            CONFIG.DIFFICULTY_ENEMY_SPEED_MAX_MULTIPLIER
-        );
+        if (this.#weaponComponent) {
+            this.#weaponComponent.setFireInterval(getEnemyFireIntervalForLevel(
+                CONFIG.ENEMY_FIGHTER_BULLET_INTERVAL,
+                level,
+                CONFIG.DIFFICULTY_ENEMY_FIRE_RATE_LEVEL_MULTIPLIER,
+                CONFIG.ENEMY_FIGHTER_BULLET_MIN_INTERVAL
+            ));
+        }
     }
 
     update(ts, dt) {
